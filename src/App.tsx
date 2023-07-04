@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Main } from './components/Main';
 import { Sidebar } from './components/Sidebar';
@@ -12,14 +12,27 @@ type noteType = {
 };
 
 function App() {
-  const [notes, setNotes] = useState<noteType[]>([]);
+  const [notes, setNotes] = useState<noteType[]>(
+    localStorage.getItem('notes')
+      ? JSON.parse(localStorage.getItem('notes') as string)
+      : []
+  );
   const [activeNote, setACtiveNote] = useState<string>('');
+
+  useEffect(() => {
+    // ローカルストレージにノートを保存する
+    localStorage.setItem('notes', JSON.stringify(notes));
+  }, [notes]);
+
+  useEffect(() => {
+    setACtiveNote(notes[0].id);
+  }, []);
 
   const onAddNote = () => {
     const newNote: noteType = {
       id: uuid(),
       title: '新しいノート',
-      content: '新しいノートの内容',
+      content: '',
       modDate: Date.now(),
     };
     setNotes([...notes, newNote]);
