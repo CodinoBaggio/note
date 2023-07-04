@@ -3,10 +3,19 @@ import './Sidebar.css';
 
 type Props = {
   onAddNote: () => void;
-  notes: { id: number; title: string; content: string; modDate: number }[];
+  notes: { id: string; title: string; content: string; modDate: number }[];
+  onDeleteNote: (id: string) => void;
+  activeNote: string;
+  setACtiveNote: (activeNote: string) => void;
 };
 
-export const Sidebar: FC<Props> = ({ onAddNote, notes }) => {
+export const Sidebar: FC<Props> = ({
+  onAddNote,
+  notes,
+  onDeleteNote,
+  activeNote,
+  setACtiveNote,
+}) => {
   return (
     <div className="app-sidebar">
       <div className="app-sidebar-header">
@@ -15,10 +24,20 @@ export const Sidebar: FC<Props> = ({ onAddNote, notes }) => {
       </div>
       <div className="app-sidebar-notes">
         {notes.map((note) => (
-          <div className="app-sidebar-note">
-            <div key={note.id} className="sidebar-note-title">
+          <div
+            className={`app-sidebar-note ${note.id === activeNote && 'active'}`}
+            key={note.id}
+            onClick={() => setACtiveNote(note.id)}
+          >
+            <div className="sidebar-note-title">
               <strong>{note.title}</strong>
-              <button>削除</button>
+              <button
+                onClick={() => {
+                  onDeleteNote(note.id);
+                }}
+              >
+                削除
+              </button>
             </div>
             <p>{note.content}</p>
             <small>
