@@ -25,6 +25,7 @@ function App() {
   }, [notes]);
 
   useEffect(() => {
+    if (notes.length === 0) return;
     setACtiveNote(notes[0].id);
   }, []);
 
